@@ -1,80 +1,48 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: http://stickerprinter.apiblueprint.org/
 
 # stickerprinter
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+Sticker printer is a web application that allows the uploading and the purchasing of stickers
 
-## Questions Collection [/questions]
+## Purchasing a sticker [/purchase]
+### Upload and pay for a sticker [POST]
 
-### List All Questions [GET]
+Upload a PNG and payment details and recieve a JWT valid for 14 days
 
-+ Response 200 (application/json)
++ Attributes
+    + sticker: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg== (string) - Base64 PNG data URL for the sticker
+    + stripeToken: tok_1Ca86c2eZvKYlo2CpM4c0yMD (string) - Charge token from the Stripe form input
++ Request (application/x-www-form-urlencoded)
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
-
-+ Request (application/json)
-
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
-
-+ Response 201 (application/json)
-
++ Response 202 (text/jwt)
     + Headers
-
-            Location: /questions/2
-
     + Body
+    
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3OTZjNjhkZC03YjhlLTQ4MjktODgzYS1lZWRlNWU2OTA0MDgiLCJpYXQiOjE1MTYyMzkwMjJ9.fp4axvF2M9WW9De6w0HviqAUogN13xVkkntYywzTbos
 
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
-            }
++ Response 403 (text/plain)
+    + Body
+    
+            Payment token invalid
+
++ Response 406 (text/plain)
+    + Body
+    
+            Sticker invalid
+        
+## Printing a sticker [/print/{token}]
++ Parameters
+    + token - a JWT to verify
+
+### Verify token and download it [GET]
++ Response 202 (image/png)
+    + Headers
+    + Body
+    
+            data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==
+
++ Response 403 (text/plain)
+    + Body
+    
+            Token invalid
