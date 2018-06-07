@@ -30,12 +30,13 @@ Upload a PNG and payment details and recieve a JWT valid for 14 days
     + Body
     
             Sticker invalid
-        
-## Printing a sticker [/print/{token}]
-+ Parameters
-    + token - a JWT to verify
+   
+## Printing a sticker [/print]
 
-### Verify token and download it [GET]
+### Verify token and download it [POST]
+
++ Attributes
+    + job: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3OTZjNjhkZC03YjhlLTQ4MjktODgzYS1lZWRlNWU2OTA0MDgiLCJpYXQiOjE1MTYyMzkwMjJ9.fp4axvF2M9WW9De6w0HviqAUogN13xVkkntYywzTbos (string) - The JWT representing the print job
 + Response 202 (image/png)
     + Headers
     + Body
